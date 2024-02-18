@@ -1,10 +1,41 @@
 # Pre-Test for LFX-WasmEdge ([#3170](https://github.com/WasmEdge/WasmEdge/issues/3170))
 
+
+**LFX Profile**: Sparsh Sethi
 <br>
+**Registered Email**: sparshsethi15@gmail.com
+
 
 !! Using the [`hydai/0.13.5_ggml_lts`](https://github.com/WasmEdge/WasmEdge/tree/hydai/0.13.5_ggml_lts) branch for this pre-test
 
+<hr>
 
+## Table of Contents
+
+
+- [Pre-Test for LFX-WasmEdge (#3170)](#pre-test-for-lfx-wasmedge-3170)
+  - [Configuration](#configuration)
+- [Section 1: Building Whisper.cpp from source](#section-1-building-whispercpp-from-source)
+    - [Step 1: Cloning the whisper.cpp repository](#step-1-cloning-the-whispercpp-repository)
+    - [Step 2: Choosing a model](#step-2-choosing-a-model)
+    - [Step 3: Downloading the model (in `GGML` format)](#step-3-downloading-the-model-in-ggml-format)
+    - [Step 4: Building the whisper.cpp binaries](#step-4-building-the-whispercpp-binaries)
+    - [Step 5: Running the transcription](#step-5-running-the-transcription)
+- [Section 2A: Building WasmEdge with WASI-NN llama.cpp backend](#section-2a-building-wasmedge-with-wasi-nn-llamacpp-backend)
+    - [Step 1: Cloning the WasmEdge repository](#step-1-cloning-the-wasmedge-repository)
+    - [Step 2: Installing the required dependencies](#step-2-installing-the-required-dependencies)
+    - [Step 3: Building (without GPU acceleration)](#step-3-building-without-gpu-acceleration)
+    - [Step 4: Installing the GGML backend](#step-4-installing-the-ggml-backend)
+- [Section 2B: Testing the plug-in](#section-2b-testing-the-plug-in)
+    - [Step 1: Downloading the pre-compiled WASM of API Server](#step-1-downloading-the-pre-compiled-wasm-of-api-server)
+    - [Step 2: Choosing a model](#step-2-choosing-a-model-1)
+    - [Step 3: Choosing the right weight/parameters](#step-3-choosing-the-right-weightparameters)
+    - [Step 4: Choosing the right quantization](#step-4-choosing-the-right-quantization)
+    - [Step 5: Running the API Server](#step-5-running-the-api-server)
+    - [Step 6: Making calls to the server](#step-6-making-calls-to-the-server)
+
+
+<hr>
 
 
 ## Configuration
