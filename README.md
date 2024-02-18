@@ -5,6 +5,8 @@
 !! Using the [`hydai/0.13.5_ggml_lts`](https://github.com/WasmEdge/WasmEdge/tree/hydai/0.13.5_ggml_lts) branch for this pre-test
 
 
+
+
 ## Configuration
 
 ! **Operating System** : Ubuntu 22.04
@@ -15,6 +17,60 @@
 
 ! **GPU** : NVIDIA GTX 1650 (4GB VRAM)
 
+
+<hr>
+
+
+# Section 1: Building Whisper.cpp from source
+
+Building whisper.cpp was a quite trivial process.
+I followed the steps below -:
+
+
+### Step 1: Cloning the whisper.cpp repository
+
+```
+git clone https://github.com/ggerganov/whisper.cpp && cd whisper.cpp
+```
+### Step 2: Choosing a model
+
+Since `whisper.cpp` supports `quantization` techniques, it is possible to reduce the size of the model and the memory it takes to load.
+
+I have chosen to download the `q5` quantized model based on my current hardware.
+
+Also, I am going to download the `base-en` version of Whisper since I don't require the inference in other languages.
+
+
+### Step 3: Downloading the model (in `GGML` format)
+
+```
+wget https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
+```
+
+### Step 4: Building the whisper.cpp binaries
+
+```
+make
+```
+
+![](assets/building-whisper-cpp.png)
+
+We have built the `main` binary now.
+
+### Step 5: Running the transcription
+
+
+Running an audio transcription on a recent YouTube video of Apple Vision Pro. Let's see how it goes :grin:
+
+```
+./main -m ggml-base.en.bin -f youtube-apple-vision-pro.wav
+```
+
+![](assets/transcription.png)
+
+It was actually quite accurate and quick. It just took around **8 seconds** for that length.
+
+<hr>
 
 # Section 2A: Building WasmEdge with WASI-NN llama.cpp backend
 
@@ -27,15 +83,15 @@ Currently, WASI-NN supports the following backends:
 - TensorFlow Lite 
 - [`llama.cpp`](https://github.com/ggerganov/llama.cpp)
 
-I am building `llama.cpp` plugin in this guide. 
+I am building the `llama.cpp` backend in this walthrough. 
 `llama.cpp` is the C++ port of the famous LLaMA model by Facebook. 
 
-It supports inferencing the model on CPU-only systems by allowing the use of **quantization** on the model weights
+It supports inferencing the model on low-end GPUs as well as on CPU-only systems by allowing the use of `quantization` on model weights
 
 <br>
 
 By default, WASI-NN backends are not automatically enabled in the normal build of WasmEdge. 
-I enabled it with the following steps -:
+I built it with the following steps -:
 
 
 ### Step 1: Cloning the WasmEdge repository 
@@ -58,6 +114,7 @@ sudo apt install llvm-14-dev liblld-14-dev
 sudo apt install -y gcc g++
 ```
 
+<br>
 
 ### Step 3: Building (without GPU acceleration)
 
@@ -90,13 +147,13 @@ Now here comes the interesting part, `llama.cpp` supports a wide variety of mode
 - Mixtral (Mixture of Experts)
 - Multi-modal models like LLaVa
 
-I am going to use the `Wizard-Vicuna-Uncensored` model, which is a part of Llama 2 family of LLMs.
+I am going to use the `Wizard-Vicuna-Uncensored` model, which is a part of the Llama 2 family of LLMs.
 
 ### Step 3: Choosing the right weight/parameters
 
 Models like LLaMA 2 are released in different variants based on the number of parameters used in training: 7B, 13B, 33B etc)
 Higher the parameters, higher is it's performance constraints. 
-Based on my System configuration, I am gonna use the `7B parameter` variant
+Based on my System configuration, I am going to use the `7B parameter` variant
 
 ### Step 4: Choosing the right quantization
 
@@ -126,6 +183,7 @@ Now, I tried 2 ways of calling the sever. One is simply through the terminal usi
 
 ![curl-to-server-with-prompt](assets/curl-to-server-with-prompt.png)
 
-The other way is to use this server with a agent framework like `Langchain`
-My source code for that in Python can be found [here](langchain-example/index.py)
+The other way is to use this server with an agent framework like `Langchain` since it is following the API spec of OpenAI.
+
+I have written the Python code for that which can be found [here](langchain-example/index.py)
 
