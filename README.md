@@ -57,6 +57,8 @@ make
 
 We have built the `main` binary now.
 
+<br> 
+
 ### Step 5: Running the transcription
 
 
@@ -122,10 +124,14 @@ sudo apt install -y gcc g++
 cmake -GNinja -Bbuild -DCMAKE_BUILD_TYPE=Release -DWASMEDGE_PLUGIN_WASI_NN_BACKEND="GGML" -DWASMEDGE_PLUGIN_WASI_NN_GGML_LLAMA_BLAS=OFF .
 ```
 
-### Step 4: Installing
+![](assets/building-wasmedge-ggml.png)
+
+### Step 4: Installing the GGML backend
 ```
 sudo cmake --install build
 ```
+
+![](assets/installing-wasmedge-ggml.png)
 
 <hr>
 
@@ -149,11 +155,15 @@ Now here comes the interesting part, `llama.cpp` supports a wide variety of mode
 
 I am going to use the `Wizard-Vicuna-Uncensored` model, which is a part of the Llama 2 family of LLMs.
 
+<br> 
+
 ### Step 3: Choosing the right weight/parameters
 
 Models like LLaMA 2 are released in different variants based on the number of parameters used in training: 7B, 13B, 33B etc)
 Higher the parameters, higher is it's performance constraints. 
 Based on my System configuration, I am going to use the `7B parameter` variant
+
+<br> 
 
 ### Step 4: Choosing the right quantization
 
@@ -162,7 +172,7 @@ Since llama.cpp uses the ``GGUF`` (previously `GGML`) model architecture, it is 
 It supports 2-bit, 3-bit, 4-bit quantization, and so on.
 Lower the quantized bits, the lesser accurate the model is but also the faster and less memory consuming it is.
 
-I am going to download the `2-bit` quantization model based on my hardware.
+I am going to **download** the `2-bit` quantized model based on my hardware.
 
 ```
 wget "https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGUF/resolve/main/Wizard-Vicuna-7B-Uncensored.Q2_K.gguf"
@@ -175,7 +185,11 @@ Starting the server is fairly simple now, we just need to pass the **model path*
 ```
 wasmedge --dir .:. --nn-preload default:GGML:AUTO:Wizard-Vicuna-7B-Uncensored.Q2_K.gguf llama-api-server.wasm -p vicuna-1.1-chat -g 0
 ```
+![Alt text](assets/running-server.png)
+
 **Port**: 8080
+
+<br> 
 
 ### Step 6: Making calls to the server
 
@@ -183,7 +197,7 @@ Now, I tried 2 ways of calling the sever. One is simply through the terminal usi
 
 ![curl-to-server-with-prompt](assets/curl-to-server-with-prompt.png)
 
-The other way is to use this server with an agent framework like `Langchain` since it is following the API spec of OpenAI.
+The other way is to use this server with an agent framework like `Langchain` since our server follows the API spec of OpenAI.
 
 I have written the Python code for that which can be found [here](langchain-example/index.py)
 
